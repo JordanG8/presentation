@@ -6,7 +6,7 @@ COPY index.html /usr/share/nginx/html/
 COPY style.css /usr/share/nginx/html/
 COPY soldiers.js /usr/share/nginx/html/
 COPY Prayer.mp4 /usr/share/nginx/html/
-COPY data/ /usr/share/nginx/html/data/
+COPY images/ /usr/share/nginx/html/images/
 
 # Expose port 80
 EXPOSE 80
