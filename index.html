@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fallen Soldiers Memorial</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <video autoplay muted loop id="video-bg">
+      <source src="Prayer.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Search Icon -->
+    <button id="searchIcon" class="search-icon" aria-label="Search">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </button>
+
+    <!-- Fullscreen Button -->
+    <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Fullscreen">
+      <svg id="enterFullscreenIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+      </svg>
+      <svg id="exitFullscreenIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+      </svg>
+    </button>
+
+    <!-- Search Panel -->
+    <div id="searchPanel" class="search-panel">
+      <div class="search-header">
+        <input type="text" id="searchInput" placeholder="חפש חייל..." autocomplete="off" />
+        <button id="closeSearch" class="close-btn" aria-label="Close">×</button>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <div id="memorial"></div>
+
+    <div class="navigation">
+      <button id="prevBtn"><</button>
+      <span id="slideIndex"></span>
+      <button id="nextBtn">></button>
+    </div>
+
+
+    <script src="soldiers.js"></script>
+    <script>
+      const memorial = document.getElementById("memorial");
+      soldiersData.reverse();
+      let soldiers = soldiersData;
+
+      // Global state for slideshow
+      let currentIndex = 0;
+      let slideInterval;
+      let removalTimeout = null;
+      const displayTime = 8000; // 8 seconds
+      const fadeTime = 1000; // This should match the CSS transition time
+
+      // Global showSoldier function
+      function showSoldier(index) {
+        const slideIndexSpan = document.getElementById("slideIndex");
+        if (index >= soldiers.length) return;
+        const soldier = soldiers[index];
+
+        // Cancel any pending removal
+        if (removalTimeout) {
+          clearTimeout(removalTimeout);
+          removalTimeout = null;
+        }
+
+        // Keep only the most recent slide, remove any older ones immediately
+        while (memorial.children.length > 1) {
+          const oldestSlide = memorial.firstChild;
+          const oldImg = oldestSlide.querySelector('.soldier-image');
+          if (oldImg) {
+            oldImg.src = ''; // Release memory
+          }
+          memorial.removeChild(oldestSlide);
+        }
+
+        const existingContainer = memorial.firstChild;
+
+        const soldierContainer = document.createElement("div");
+        soldierContainer.className = "soldier-container";
+
+        soldierContainer.innerHTML = `
+                  <div class="soldier-details">
+                      <div class="soldier-title">
+                        <h1>${soldier.rank} ${soldier.name}</h1>
+                      </div>
+                      <div class="soldier-death-info">${soldier.dateAndCauseOfDeath}</div>
+                  </div>
+                  <div class="soldier-image-container">
+                      <img src="${soldier.image}" alt="${soldier.name}" class="soldier-image">
+                  </div>
+              `;
+        memorial.appendChild(soldierContainer);
+        slideIndexSpan.textContent = `(${index + 1}/${soldiers.length})`;
+
+        // Fade in the new slide
+        setTimeout(() => {
+          soldierContainer.classList.add("active");
+        }, 50); // Small delay to ensure transition is applied
+
+        // Fade out and remove the old slide
+        if (existingContainer) {
+          existingContainer.classList.remove("active");
+          removalTimeout = setTimeout(() => {
+            if (memorial.contains(existingContainer)) {
+              // Clear image src to release memory before removing
+              const oldImg = existingContainer.querySelector('.soldier-image');
+              if (oldImg) {
+                oldImg.src = '';
+              }
+              memorial.removeChild(existingContainer);
+            }
+            removalTimeout = null;
+          }, fadeTime); // Remove after fade out completes
+        }
+      }
+
+      function nextSlide() {
+        currentIndex = (currentIndex + 1) % soldiers.length;
+        showSoldier(currentIndex);
+      }
+
+      function prevSlide() {
+        currentIndex = (currentIndex - 1 + soldiers.length) % soldiers.length;
+        showSoldier(currentIndex);
+      }
+
+      function resetInterval() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, displayTime);
+      }
+
+      function startSlideshow() {
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        nextBtn.addEventListener("click", () => {
+          nextSlide();
+          resetInterval();
+        });
+
+        prevBtn.addEventListener("click", () => {
+          prevSlide();
+          resetInterval();
+        });
+
+        // Initial call
+        showSoldier(currentIndex);
+        slideInterval = setInterval(nextSlide, displayTime);
+      }
+
+      startSlideshow();
+
+      // Search functionality
+      const searchIcon = document.getElementById('searchIcon');
+      const searchPanel = document.getElementById('searchPanel');
+      const closeSearch = document.getElementById('closeSearch');
+      const searchInput = document.getElementById('searchInput');
+      const searchResults = document.getElementById('searchResults');
+
+      // Open search panel
+      searchIcon.addEventListener('click', () => {
+        searchPanel.classList.add('open');
+        searchInput.focus();
+      });
+
+      // Close search panel
+      closeSearch.addEventListener('click', () => {
+        searchPanel.classList.remove('open');
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+      });
+
+      // Close panel on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && searchPanel.classList.contains('open')) {
+          searchPanel.classList.remove('open');
+          searchInput.value = '';
+          searchResults.innerHTML = '';
+        }
+      });
+
+      // Search input handler with autocomplete
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+
+        if (query.length === 0) {
+          searchResults.innerHTML = '';
+          return;
+        }
+
+        console.log('Search query:', query);
+        console.log('Total soldiers:', soldiers.length);
+
+        // Filter soldiers based on search query
+        const filtered = soldiers.filter(soldier => {
+          const searchText = `${soldier.name} ${soldier.rank}`.toLowerCase();
+          return searchText.includes(query.toLowerCase());
+        });
+
+        console.log('Filtered results:', filtered.length);
+
+        // Display results
+        if (filtered.length === 0) {
+          searchResults.innerHTML = '<div class="no-results">לא נמצאו תוצאות</div>';
+          return;
+        }
+
+        searchResults.innerHTML = filtered.map((soldier, index) => {
+          const soldierIndex = soldiers.findIndex(s => s === soldier);
+          return `
+            <div class="search-result-item" data-index="${soldierIndex}">
+              <img src="${soldier.image}" alt="${soldier.name}" class="search-result-img" />
+              <div class="search-result-info">
+                <div class="search-result-name">${soldier.name}</div>
+                <div class="search-result-rank">${soldier.rank}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Add click handlers to search results
+        document.querySelectorAll('.search-result-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const index = parseInt(item.dataset.index);
+            currentIndex = index;
+            showSoldier(currentIndex);
+            searchPanel.classList.remove('open');
+            searchInput.value = '';
+            searchResults.innerHTML = '';
+            resetInterval();
+          });
+        });
+      });
+
+      // Fullscreen functionality
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+      const enterIcon = document.getElementById('enterFullscreenIcon');
+      const exitIcon = document.getElementById('exitFullscreenIcon');
+      const navigation = document.querySelector('.navigation');
+      let isFullscreen = false;
+
+      fullscreenBtn.addEventListener('click', () => {
+        if (!isFullscreen) {
+          // Enter fullscreen
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+          }
+        } else {
+          // Exit fullscreen
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        }
+      });
+
+      // Listen for fullscreen changes
+      function handleFullscreenChange() {
+        isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+
+        if (isFullscreen) {
+          // Hide navigation and search icon
+          navigation.style.display = 'none';
+          searchIcon.style.display = 'none';
+          // Switch icons
+          enterIcon.style.display = 'none';
+          exitIcon.style.display = 'block';
+        } else {
+          // Show navigation and search icon
+          navigation.style.display = 'flex';
+          searchIcon.style.display = 'flex';
+          // Switch icons
+          enterIcon.style.display = 'block';
+          exitIcon.style.display = 'none';
+        }
+      }
+
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.addEventListener('msfullscreenchange', handleFullscreenChange);
+    </script>
+  </body>
+</html>

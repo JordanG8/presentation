@@ -1,0 +1,345 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "aduma", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  background: #000000;
+}
+
+#video-bg {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 0;
+  /* Darken the video for better text contrast */
+  filter: brightness(0.4) contrast(1.1);
+}
+
+.soldier-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.98);
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.soldier-container.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.soldier-details {
+  flex: 2;
+  padding-right: 60px;
+  padding-top: 7%;
+  text-align: right;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: start; /* Center content vertically */
+  align-self: start;
+}
+
+.soldier-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.soldier-image {
+  width: auto;
+  height: 80vh;
+  max-height: 85vh;
+  aspect-ratio: 5 / 7;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* --- REDESIGNED TEXT STYLES --- */
+.soldier-title {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-bottom: 15px;
+}
+/* Soldier's Name (Most Prominent) */
+h1 {
+  font-size: 7em; /* Larger font size */
+  font-weight: 700;
+  margin: 0;
+  padding: 0 0.2em;
+  line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8); /* Simple, subtle shadow */
+  word-break: keep-all; /* Prevents breaking within words and keeps ::after with last word */
+}
+
+/* Date of Death (Tertiary) */
+.soldier-death-info {
+  font-size: 2.7em; /* Smallest font size */
+  font-weight: 300;
+  margin-right: 4%;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  line-height: 1.5;
+}
+
+h1::after {
+  content: ' ז"ל';
+  font-size: 0.4em; /* Relative to h1 */
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  vertical-align: middle;
+  margin-right: 0.2em;
+  white-space: nowrap; /* Prevents ::after content from wrapping alone */
+}
+
+.navigation {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.navigation button {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  font-size: 2em;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.navigation button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#slideIndex {
+  font-size: 1.5em;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Search Icon */
+.search-icon {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 200;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.search-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Fullscreen Button */
+.fullscreen-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 200;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.fullscreen-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Search Panel */
+.search-panel {
+  position: fixed;
+  top: 0;
+  left: -400px;
+  width: 400px;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  z-index: 300;
+  transition: left 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.search-panel.open {
+  left: 0;
+}
+
+.search-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#searchInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 1.1em;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+#searchInput:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+#searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2em;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Search Results */
+.search-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: right;
+  direction: rtl;
+}
+
+.search-result-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(-5px);
+}
+
+.search-result-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.search-result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.search-result-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: white;
+}
+
+.search-result-rank {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.1em;
+}
+
+/* Scrollbar styling for search results */
+.search-results::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.search-results::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
