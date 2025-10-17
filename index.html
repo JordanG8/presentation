@@ -45,6 +45,15 @@
 
     <div class="navigation">
       <button id="prevBtn"><</button>
+      <button id="pausePlayBtn" aria-label="Pause/Play">
+        <svg id="pauseIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="6" y="4" width="4" height="16"></rect>
+          <rect x="14" y="4" width="4" height="16"></rect>
+        </svg>
+        <svg id="playIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+          <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+      </button>
       <span id="slideIndex"></span>
       <button id="nextBtn">></button>
     </div>
@@ -60,6 +69,7 @@
       let currentIndex = 0;
       let slideInterval;
       let removalTimeout = null;
+      let isPaused = false;
       const displayTime = 8000; // 8 seconds
       const fadeTime = 1000; // This should match the CSS transition time
 
@@ -144,15 +154,39 @@
       function startSlideshow() {
         const prevBtn = document.getElementById("prevBtn");
         const nextBtn = document.getElementById("nextBtn");
+        const pausePlayBtn = document.getElementById("pausePlayBtn");
+        const pauseIcon = document.getElementById("pauseIcon");
+        const playIcon = document.getElementById("playIcon");
 
         nextBtn.addEventListener("click", () => {
           nextSlide();
-          resetInterval();
+          if (!isPaused) {
+            resetInterval();
+          }
         });
 
         prevBtn.addEventListener("click", () => {
           prevSlide();
-          resetInterval();
+          if (!isPaused) {
+            resetInterval();
+          }
+        });
+
+        // Pause/Play button functionality
+        pausePlayBtn.addEventListener("click", () => {
+          isPaused = !isPaused;
+
+          if (isPaused) {
+            // Pause the slideshow
+            clearInterval(slideInterval);
+            pauseIcon.style.display = 'none';
+            playIcon.style.display = 'block';
+          } else {
+            // Resume the slideshow
+            slideInterval = setInterval(nextSlide, displayTime);
+            pauseIcon.style.display = 'block';
+            playIcon.style.display = 'none';
+          }
         });
 
         // Initial call
@@ -239,7 +273,9 @@
             searchPanel.classList.remove('open');
             searchInput.value = '';
             searchResults.innerHTML = '';
-            resetInterval();
+            if (!isPaused) {
+              resetInterval();
+            }
           });
         });
       });
