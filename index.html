@@ -11,22 +11,40 @@
       <source src="Prayer.mp4" type="video/mp4" />
     </video>
 
+    <!-- Search Icon (Desktop - standalone) -->
+    <button id="searchIcon" class="search-icon desktop-only" aria-label="Search">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </button>
+
+    <!-- Fullscreen Button (Desktop - standalone) -->
+    <button id="fullscreenBtn" class="fullscreen-btn desktop-only" aria-label="Fullscreen">
+      <svg id="enterFullscreenIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+      </svg>
+      <svg id="exitFullscreenIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+        <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+      </svg>
+    </button>
+
     <!-- Mobile Top Bar (visible on mobile only) -->
     <div class="mobile-top-bar">
-      <!-- Search Icon -->
-      <button id="searchIcon" class="search-icon" aria-label="Search">
+      <!-- Search Icon (Mobile) -->
+      <button id="searchIconMobile" class="search-icon" aria-label="Search">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
           <path d="m21 21-4.35-4.35"></path>
         </svg>
       </button>
 
-      <!-- Fullscreen Button -->
-      <button id="fullscreenBtn" class="fullscreen-btn" aria-label="Fullscreen">
-        <svg id="enterFullscreenIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <!-- Fullscreen Button (Mobile) -->
+      <button id="fullscreenBtnMobile" class="fullscreen-btn" aria-label="Fullscreen">
+        <svg id="enterFullscreenIconMobile" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
         </svg>
-        <svg id="exitFullscreenIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+        <svg id="exitFullscreenIconMobile" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
           <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
         </svg>
       </button>
@@ -198,16 +216,23 @@
 
       // Search functionality
       const searchIcon = document.getElementById('searchIcon');
+      const searchIconMobile = document.getElementById('searchIconMobile');
       const searchPanel = document.getElementById('searchPanel');
       const closeSearch = document.getElementById('closeSearch');
       const searchInput = document.getElementById('searchInput');
       const searchResults = document.getElementById('searchResults');
 
-      // Open search panel
-      searchIcon.addEventListener('click', () => {
+      // Open search panel function
+      const openSearchPanel = () => {
         searchPanel.classList.add('open');
         searchInput.focus();
-      });
+      };
+
+      // Open search panel - Desktop
+      searchIcon.addEventListener('click', openSearchPanel);
+
+      // Open search panel - Mobile
+      searchIconMobile.addEventListener('click', openSearchPanel);
 
       // Close search panel
       closeSearch.addEventListener('click', () => {
@@ -282,12 +307,16 @@
 
       // Fullscreen functionality
       const fullscreenBtn = document.getElementById('fullscreenBtn');
+      const fullscreenBtnMobile = document.getElementById('fullscreenBtnMobile');
       const enterIcon = document.getElementById('enterFullscreenIcon');
       const exitIcon = document.getElementById('exitFullscreenIcon');
+      const enterIconMobile = document.getElementById('enterFullscreenIconMobile');
+      const exitIconMobile = document.getElementById('exitFullscreenIconMobile');
       const navigation = document.querySelector('.navigation');
       let isFullscreen = false;
 
-      fullscreenBtn.addEventListener('click', () => {
+      // Fullscreen toggle function
+      const toggleFullscreen = () => {
         if (!isFullscreen) {
           // Enter fullscreen
           if (document.documentElement.requestFullscreen) {
@@ -307,7 +336,11 @@
             document.msExitFullscreen();
           }
         }
-      });
+      };
+
+      // Fullscreen buttons - Desktop and Mobile
+      fullscreenBtn.addEventListener('click', toggleFullscreen);
+      fullscreenBtnMobile.addEventListener('click', toggleFullscreen);
 
       // Listen for fullscreen changes
       function handleFullscreenChange() {
@@ -321,10 +354,14 @@
           // For desktop mode, also hide standalone buttons
           if (window.innerWidth > 768) {
             searchIcon.style.display = 'none';
+            fullscreenBtn.style.display = 'none';
           }
-          // Switch icons
+          // Switch icons - Desktop
           enterIcon.style.display = 'none';
           exitIcon.style.display = 'block';
+          // Switch icons - Mobile
+          enterIconMobile.style.display = 'none';
+          exitIconMobile.style.display = 'block';
         } else {
           // Show navigation and appropriate layout
           navigation.style.display = 'flex';
@@ -334,10 +371,14 @@
           // For desktop mode, show standalone buttons
           if (window.innerWidth > 768) {
             searchIcon.style.display = 'flex';
+            fullscreenBtn.style.display = 'flex';
           }
-          // Switch icons
+          // Switch icons - Desktop
           enterIcon.style.display = 'block';
           exitIcon.style.display = 'none';
+          // Switch icons - Mobile
+          enterIconMobile.style.display = 'block';
+          exitIconMobile.style.display = 'none';
         }
       }
 

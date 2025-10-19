@@ -182,6 +182,17 @@ h1::after {
   display: none;
 }
 
+/* Desktop-only elements - Hidden on mobile */
+.desktop-only {
+  display: flex;
+}
+
+@media screen and (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
 /* Search Icon */
 .search-icon {
   position: fixed;

@@ -15,7 +15,7 @@ const soldiersData = [
     name: "מיכאל מרדכי נחמני",
     rank: "רס\"ל (במיל')",
     dateAndCauseOfDeath: 'נפל בי"ז בתשרי התשפ"ו (09 באוקטובר 2025)',
-    image: "images/מיכאל מרדכי נחמני ז-ל.jpg",
+    image: "images/מיכאל מרדכי נחמני ז-ל.jpeg",
   },
   {
     name: "עינבר אברהם קב",
@@ -579,7 +579,7 @@ const soldiersData = [
     name: "איליי גבריאל אטדגי",
     rank: "סרן",
     dateAndCauseOfDeath: 'נפל בכ"ב בכסלו התשפ"ה (23 בדצמבר 2024)',
-    image: "images/איליי גבריאל אטדגי ז-ל.jpg",
+    image: "images/איליי גבריאל אטדגי ז-ל.jpeg",
   },
   {
     name: "אלכסנדר אנוסוב",
@@ -1366,7 +1366,7 @@ const soldiersData = [
     name: "יונתן אהרן גרינבלט",
     rank: "סמל",
     dateAndCauseOfDeath: 'נפל בכ"א בתמוז התשפ"ד (27 ביולי 2024)',
-    image: "images/יונתן אהרן גרינבלט ז-ל.jpg",
+    image: "images/יונתן אהרן גרינבלט ז-ל.jpeg",
   },
   {
     name: "מוטי רווה",
@@ -1822,7 +1822,7 @@ const soldiersData = [
     name: "נחמן נתן הרץ",
     rank: "רס\"ר (במיל')",
     dateAndCauseOfDeath: 'נפל בכ"ח בניסן התשפ"ד (06 במאי 2024)',
-    image: "images/נחמן נתן הרץ ז-ל.jpg",
+    image: "images/נחמן נתן הרץ ז-ל.jpeg",
   },
   {
     name: "מיכאל רוזל",
@@ -1834,7 +1834,7 @@ const soldiersData = [
     name: "טל שביט",
     rank: 'סמ"ר',
     dateAndCauseOfDeath: 'נפל בכ"ז בניסן התשפ"ד (05 במאי 2024)',
-    image: "images/טל שביט ז-ל.jpg",
+    image: "images/טל שביט ז-ל.jpeg",
   },
   {
     name: "עידו טסטה",
@@ -3398,7 +3398,7 @@ const soldiersData = [
     name: "נועם יוסף אבו",
     rank: 'סמ"ר',
     dateAndCauseOfDeath: 'נפל בכ"ד בחשוון התשפ"ד (08 בנובמבר 2023)',
-    image: "images/נועם יוסף אבו ז-ל.jpg",
+    image: "images/נועם יוסף אבו ז-ל.jpeg",
   },
   {
     name: "יונתן חצור",
@@ -3560,7 +3560,7 @@ const soldiersData = [
     name: "עידו עובדיה",
     rank: "סמל",
     dateAndCauseOfDeath: 'נפל בט"ז בחשוון התשפ"ד (31 באוקטובר 2023)',
-    image: "images/עידו עובדיה ז-ל.jpg",
+    image: "images/עידו עובדיה ז-ל.jpeg",
   },
   {
     name: "עדי ליאון",
@@ -4298,7 +4298,7 @@ const soldiersData = [
     name: "אור אביטל",
     rank: "סמל",
     dateAndCauseOfDeath: 'נפל בכ"ב בתשרי התשפ"ד (07 באוקטובר 2023)',
-    image: "images/אור אביטל ז-ל.jpg",
+    image: "images/אור אביטל ז-ל.jpeg",
   },
   {
     name: "אילן פיורנטינו",
@@ -5102,7 +5102,7 @@ const soldiersData = [
     name: "ניתאי עמאר",
     rank: "סרן",
     dateAndCauseOfDeath: 'נפל בכ"ב בתשרי התשפ"ד (07 באוקטובר 2023)',
-    image: "images/ניתאי עמאר ז-ל.jpg",
+    image: "images/ניתאי עמאר ז-ל.jpeg",
   },
   {
     name: "יוסף איתמר ברוכים",
